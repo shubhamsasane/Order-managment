@@ -11,9 +11,6 @@ import java.util.List;
 
 @RestController
 public class OrderController {
-    /**
-     * implement the following endpoints
-     */
 
     @GetMapping("order")
     public ResponseEntity<List<Order>> getAllOrders(){
