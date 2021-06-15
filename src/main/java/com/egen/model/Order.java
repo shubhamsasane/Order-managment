@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+
 @Entity
 public class Order {
     @Id
@@ -19,12 +20,11 @@ public class Order {
     @OneToMany
     private List<Item> items;
 
-    @OneToMany
-    private List<Payment> payments;
-
     @OneToOne
     private Shipping shipping;
 
+    @OneToMany
+    private List<Payment> payments;
 
     public Order(){}
     public Order(String id){
