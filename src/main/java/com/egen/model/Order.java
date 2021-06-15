@@ -25,6 +25,7 @@ public class Order {
     @OneToOne
     private Shipping shipping;
 
+
     public Order(){}
     public Order(String id){
         this.id = id;
