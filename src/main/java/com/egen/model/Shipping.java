@@ -1,7 +1,5 @@
 package com.egen.model;
 
-import sun.security.provider.SHA;
-
 import javax.persistence.Entity;
 
 

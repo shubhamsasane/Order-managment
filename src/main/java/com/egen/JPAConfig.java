@@ -33,7 +33,7 @@ public class JPAConfig {
 	public DataSource dataSource() {
 		DriverManagerDataSource ds = new DriverManagerDataSource();
 		ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		ds.setUrl("jdbc:mysql://localhost:3306/emp_db"); //?useUnicode=true&tmp;useJDBCCompliantTimeZoneShift=true");
+		ds.setUrl("jdbc:mysql://localhost:3306/order_management"); //?useUnicode=true&tmp;useJDBCCompliantTimeZoneShift=true");
 		ds.setUsername("root");
 		ds.setPassword("rgit@1234");
 		return ds;
@@ -48,7 +48,7 @@ public class JPAConfig {
 	private Properties jpaProperties() {
 		Properties properties = new Properties();
 		properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL57Dialect");
-		properties.put("hibernate.hbm2ddl.auto", "validate");
+		properties.put("hibernate.hbm2ddl.auto", "create");
 		properties.put("hibernate.show_sql", "true");
 		return properties;
 	}

@@ -1,47 +1,65 @@
 package com.egen.controller;
 
-import com.egen.model.Order;
+import com.egen.model.Orders;
+import com.egen.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.time.ZonedDateTime;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
+@RequestMapping(value = "/orders")
 public class OrderController {
 
-    @GetMapping("order")
-    public ResponseEntity<List<Order>> getAllOrders(){
+    @Autowired
+    public OrderService orderService;
+
+    //Get all the orders
+    @RequestMapping(method = RequestMethod.GET)
+    public List<Orders> getAllOrders(){
+        List<Orders> orders = orderService.getAllOrders();
+        return orders;
+    }
+
+    //Get order by ID
+    @RequestMapping(method = RequestMethod.GET, value = "{id}")
+    public Orders getOrderById(@PathVariable("id") String oid){
+        Orders order = orderService.getOrderById(oid);
+        return order;
+    }
+
+    //GET by Time Interval
+    @RequestMapping(method = RequestMethod.GET, value = "interval")
+    public List<Orders> getAllOrdersWithInInterval(@RequestBody Timestamp startTime,@RequestBody Timestamp endTime){
+        List<Orders> orders = orderService.getAllOrdersWithInInterval(startTime, endTime);
+        return orders;
+    }
+
+    public ResponseEntity<List<Orders>> top10OrdersWithHighestDollarAmountInZip(String zip){
         //TODO
-        return ResponseEntity.ok(Collections.singletonList(new Order("id")));
-    }
-
-    public ResponseEntity<List<Order>> getOrderById(String id){
-        //TODO
         return null;
     }
 
-    public ResponseEntity<List<Order>> getAllOrdersWithInInterval(ZonedDateTime startTime, ZonedDateTime endTime){
-        //TODO
+    //POST order
+    @RequestMapping(method = RequestMethod.POST)
+    public Orders placeOrder(@RequestBody Orders order){
+        orderService.placeOrder(order);
+        return order;
+    }
+
+    public ResponseEntity<Orders> cancelOrder(Orders order){
         return null;
     }
 
-    public ResponseEntity<List<Order>> top10OrdersWithHighestDollarAmountInZip(String zip){
-        //TODO
-        return null;
+    //UPDATE order
+    @RequestMapping(method = RequestMethod.PUT, value = "{id}")
+    public Orders updateOrder(@PathVariable("id") String oid, @RequestBody  Orders order){
+        orderService.updateOrder(oid, order);
+        return order;
     }
 
-    public ResponseEntity<Order> placeOrder(Order order){
-        return null;
-    }
 
-    public ResponseEntity<Order> cancelOrder(Order order){
-        return null;
-    }
-
-    public ResponseEntity<Order> updateOrder(Order order){
-        return null;
-    }
 }
