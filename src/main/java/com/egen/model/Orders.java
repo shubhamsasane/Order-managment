@@ -12,8 +12,8 @@ import java.util.UUID;
 @Entity
 @NamedQueries({
         @NamedQuery(name = "Orders.findAll", query = "SELECT ord from Orders ord"),
-        @NamedQuery(name = "Orders.findByInterval", query = "select ords from Orders ords where ords.creation_time BETWEEN :startDate and :endDate" )
-//        @NamedQuery(name = "Orders.findByZipTop", query = "SELECT ord FROM Orders ord, Shipping adr WHERE ord..id=adr.id AND adr.zipCode=:zip_code ORDER BY ord.total desc")
+        @NamedQuery(name = "Orders.findByInterval", query = "select ords from Orders ords where ords.creation_time BETWEEN :startDate and :endDate" ),
+        @NamedQuery(name = "Orders.findTopByZip", query = "SELECT ord FROM Orders ord, Shipping adr"),
 })
 public class Orders {
     @Id

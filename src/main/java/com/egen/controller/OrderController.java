@@ -3,11 +3,9 @@ package com.egen.controller;
 import com.egen.model.Orders;
 import com.egen.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @RestController
@@ -38,9 +36,11 @@ public class OrderController {
         return orders;
     }
 
-    public ResponseEntity<List<Orders>> top10OrdersWithHighestDollarAmountInZip(String zip){
-        //TODO
-        return null;
+    //TO
+    @RequestMapping(method = RequestMethod.GET,value = "topOrders")
+    public List<Orders> top10OrdersWithHighestDollarAmountInZip(@RequestBody String zip){
+        List<Orders> orders = orderService.top10OrdersWithHighestDollarAmountInZip(zip);
+        return orders;
     }
 
     //POST order
@@ -50,13 +50,16 @@ public class OrderController {
         return order;
     }
 
-    public ResponseEntity<Orders> cancelOrder(Orders order){
-        return null;
+    //TO
+    @RequestMapping(method = RequestMethod.PUT, value = "/cancel")
+    public Orders cancelOrder(@RequestBody Orders order){
+        orderService.cancelOrder(order);
+        return order;
     }
 
     //UPDATE order
     @RequestMapping(method = RequestMethod.PUT, value = "{id}")
-    public Orders updateOrder(@PathVariable("id") String oid, @RequestBody  Orders order){
+    public Orders updateOrder(@PathVariable("id") String oid, @RequestBody Orders order){
         orderService.updateOrder(oid, order);
         return order;
     }

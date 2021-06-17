@@ -5,6 +5,7 @@ import com.egen.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.sql.Timestamp;
@@ -43,6 +44,20 @@ public class OrderServiceImpl implements OrderService {
         List<Orders> orders = orderRepository.getAllOrdersWithInInterval(startTime, endTime);
         return orders;
     }
+
+    //GET top orders by ZIP
+    @Transactional
+    public List<Orders> top10OrdersWithHighestDollarAmountInZip(String zip){
+        List<Orders> orders = orderRepository.top10OrdersWithHighestDollarAmountInZip(zip);
+        return orders;
+    }
+
+    @Transactional
+    public Orders cancelOrder(Orders order){
+        orderRepository.cancelOrder(order);
+        return order;
+    }
+
 
     //UPDATE order
     @Transactional

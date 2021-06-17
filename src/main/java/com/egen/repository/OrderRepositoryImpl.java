@@ -48,6 +48,17 @@ public class OrderRepositoryImpl implements OrderRepository {
         return orders;
     }
 
+    //GET top orders by ZIP
+    public List<Orders> top10OrdersWithHighestDollarAmountInZip(String zip){
+        TypedQuery<Orders> query  = em.createNamedQuery("Orders.findTopByZip", Orders.class);
+        List<Orders> orders = query.getResultList();
+        return orders;
+    }
+    public Orders cancelOrder(Orders order){
+        em.persist(order);
+        return order;
+    }
+
     //POST order
     public Orders placeOrder(Orders order){
         em.persist(order);
