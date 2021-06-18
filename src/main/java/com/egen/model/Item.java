@@ -1,8 +1,10 @@
 package com.egen.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import java.util.UUID;
 
 @Entity
 public class Item {
@@ -12,12 +14,16 @@ public class Item {
     private int item_qty;
     private Double item_unit_price;
 
-//    @OneToOne
-//    private Order order_id; //Foreign
 
-    public Item(){}
-    public Item(String item_id){
-        this.item_id = item_id;
+    public Item(){
+        this.item_id = UUID.randomUUID().toString();
+    }
+
+    public Item( String item_name, int item_qty, Double item_unit_price, Orders order_id) {
+        this.item_id = UUID.randomUUID().toString();
+        this.item_name = item_name;
+        this.item_qty = item_qty;
+        this.item_unit_price = item_unit_price;
     }
 
     public String getItem_id() {
@@ -51,6 +57,7 @@ public class Item {
     public void setItem_unit_price(Double item_unit_price) {
         this.item_unit_price = item_unit_price;
     }
+
 
 //    public Order getOrder_id() {
 //        return order_id;

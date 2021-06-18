@@ -3,6 +3,7 @@ package com.egen.model;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import java.util.UUID;
 
 @Entity
 public class Billing {
@@ -19,11 +20,16 @@ public class Billing {
     }
 
     public Billing() {
-
+        this.billing_id = UUID.randomUUID().toString();
     }
 
-    public String getBilling_id() {
-        return billing_id;
+    public Billing( String billing_addressline1, String billing_addressline2, String billing_city, String billing_state, String billing_zip) {
+        this.billing_id = UUID.randomUUID().toString();
+        this.billing_addressline1 = billing_addressline1;
+        this.billing_addressline2 = billing_addressline2;
+        this.billing_city = billing_city;
+        this.billing_state = billing_state;
+        this.billing_zip = billing_zip;
     }
 
     public void setBilling_id(String billing_id) {

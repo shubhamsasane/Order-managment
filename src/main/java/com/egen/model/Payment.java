@@ -1,10 +1,10 @@
 package com.egen.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.ZonedDateTime;
+import java.util.UUID;
+
 @Entity
 public class Payment {
     @Id
@@ -12,18 +12,24 @@ public class Payment {
     private Double payment_confirmation_number;
     private Double order_payment_amount;
     private String order_payment_method;
-    private ZonedDateTime order_payment_date;
+    private Timestamp order_payment_date;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     private Billing billing;    //Foreign
 
 
-    public Payment(String payment_id){
-        this.payment_id = payment_id;
+    public Payment(){
+
+        this.payment_id = UUID.randomUUID().toString();
     }
 
-    public Payment() {
-
+    public Payment(Double payment_confirmation_number, Double order_payment_amount, String order_payment_method, Timestamp order_payment_date, Billing billing) {
+        this.payment_id = UUID.randomUUID().toString();
+        this.payment_confirmation_number = payment_confirmation_number;
+        this.order_payment_amount = order_payment_amount;
+        this.order_payment_method = order_payment_method;
+        this.order_payment_date = order_payment_date;
+        this.billing = billing;
     }
 
     public String getPayment_id() {
@@ -58,11 +64,11 @@ public class Payment {
         this.order_payment_method = order_payment_method;
     }
 
-    public ZonedDateTime getOrder_payment_date() {
+    public Timestamp getOrder_payment_date() {
         return order_payment_date;
     }
 
-    public void setOrder_payment_date(ZonedDateTime order_payment_date) {
+    public void setOrder_payment_date(Timestamp order_payment_date) {
         this.order_payment_date = order_payment_date;
     }
 

@@ -1,6 +1,7 @@
 package com.egen.model;
 
 import com.egen.enums.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -28,26 +29,33 @@ public class Orders {
     private OrderStatus order_status;
 
 
-//    @OneToMany
-//    private List<Item> items;
-//
-//    @OneToOne
-//    private Shipping shipping;
-//
-//    @OneToMany
-//    private List<Payment> payments;
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Item> items;
+
+    @OneToOne(cascade = {CascadeType.ALL})
+    private Shipping shipping;
+
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Payment> payments;
 
     public Orders(){
         this.id = UUID.randomUUID().toString();
     }
 
-    public Orders(String customer_id, Double order_total, Double order_subtotal, Double order_tax, OrderStatus order_status) {
+    public Orders( String customer_id, Double order_total, Double order_subtotal, Double order_tax, Timestamp creation_time, Timestamp modification_time, OrderStatus order_status, List<Item> items, Shipping shipping, List<Payment> payments) {
         this.id = UUID.randomUUID().toString();
         this.customer_id = customer_id;
         this.order_total = order_total;
         this.order_subtotal = order_subtotal;
         this.order_tax = order_tax;
-        this.order_status = order_status;
+        this.creation_time = creation_time;
+        this.modification_time = modification_time;
+        this.order_status = OrderStatus.PLACED;
+        this.items = items;
+        this.shipping = shipping;
+        this.payments = payments;
     }
 
     public String getId() {
@@ -114,6 +122,30 @@ public class Orders {
         this.modification_time = modification_time;
     }
 
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+
+    public Shipping getShipping() {
+        return shipping;
+    }
+
+    public void setShipping(Shipping shipping) {
+        this.shipping = shipping;
+    }
+
+    public List<Payment> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(List<Payment> payments) {
+        this.payments = payments;
+    }
+
     @Override
     public String toString() {
         return "Orders{" +
@@ -125,6 +157,9 @@ public class Orders {
                 ", creation_time=" + creation_time +
                 ", modification_time=" + modification_time +
                 ", order_status=" + order_status +
+                ", items=" + items +
+                ", shipping=" + shipping +
+                ", payments=" + payments +
                 '}';
     }
 }
