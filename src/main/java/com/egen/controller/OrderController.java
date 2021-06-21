@@ -39,6 +39,7 @@ public class OrderController {
     //TO
     @RequestMapping(method = RequestMethod.GET,value = "topOrders")
     public List<Orders> top10OrdersWithHighestDollarAmountInZip(@RequestBody String zip){
+        System.out.println("======================"+zip);
         List<Orders> orders = orderService.top10OrdersWithHighestDollarAmountInZip(zip);
         return orders;
     }

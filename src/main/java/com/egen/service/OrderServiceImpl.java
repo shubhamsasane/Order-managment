@@ -1,5 +1,6 @@
 package com.egen.service;
 
+import com.egen.enums.OrderStatus;
 import com.egen.model.Orders;
 import com.egen.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Transactional
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
@@ -19,50 +22,48 @@ public class OrderServiceImpl implements OrderService {
 
     //GET all the orders
     @Override
-    @Transactional
     public List<Orders> getAllOrders(){
-        List<Orders> orders = orderRepository.getAllOrders();
+        List<Orders> orders = (List<Orders>) orderRepository.findAll();
         return orders;
     }
 
     //GET order by iD
-    @Transactional
     public Orders getOrderById(String eid){
-        Orders order = orderRepository.getOrderById(eid);
-        return order;
+        Optional<Orders> order = orderRepository.findById(eid);
+        if(order.isPresent()){
+            return order.get();
+        }
+        return null;
     }
 
     //POST order
-    @Transactional
     public Orders placeOrder(Orders order){
-        orderRepository.placeOrder(order);
+        order.setOrder_status(OrderStatus.PLACED);
+        orderRepository.save(order);
         return order;
     }
     //GET order by Time interval
-    @Transactional
     public List<Orders> getAllOrdersWithInInterval(Timestamp startTime, Timestamp endTime){
         List<Orders> orders = orderRepository.getAllOrdersWithInInterval(startTime, endTime);
         return orders;
     }
 
     //GET top orders by ZIP
-    @Transactional
     public List<Orders> top10OrdersWithHighestDollarAmountInZip(String zip){
-        List<Orders> orders = orderRepository.top10OrdersWithHighestDollarAmountInZip(zip);
+        List<Orders> orders = orderRepository.findTop10OrdersWithHighestDollarAmountInZip(zip);
         return orders;
     }
 
-    @Transactional
     public Orders cancelOrder(Orders order){
-        orderRepository.cancelOrder(order);
+        order.setOrder_status(OrderStatus.CANCELLED);
+        orderRepository.save(order);
         return order;
     }
 
 
     //UPDATE order
-    @Transactional
     public Orders updateOrder(String oid, Orders order){
-        orderRepository.updateOrder(oid, order);
+        orderRepository.save(order);
         return order;
     }
 

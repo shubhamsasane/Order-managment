@@ -11,11 +11,6 @@ import java.util.UUID;
 
 
 @Entity
-@NamedQueries({
-        @NamedQuery(name = "Orders.findAll", query = "SELECT ord from Orders ord"),
-        @NamedQuery(name = "Orders.findByInterval", query = "select ords from Orders ords where ords.creation_time BETWEEN :startDate and :endDate" ),
-        @NamedQuery(name = "Orders.findTopByZip", query = "SELECT ord FROM Orders ord, Shipping adr"),
-})
 public class Orders {
     @Id
     private String id;
