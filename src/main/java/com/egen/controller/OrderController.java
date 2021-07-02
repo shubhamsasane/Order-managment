@@ -1,47 +1,146 @@
 package com.egen.controller;
 
-import com.egen.model.Order;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.egen.dto.OrderDTO;
+import com.egen.response.Response;
+import com.egen.response.ResponseMetadata;
+import com.egen.response.StatusMessage;
+import com.egen.service.OrderService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.ZonedDateTime;
-import java.util.Collections;
+import java.sql.Timestamp;
 import java.util.List;
 
 @RestController
+@RequestMapping(value = "/orders")
 public class OrderController {
 
-    @GetMapping("order")
-    public ResponseEntity<List<Order>> getAllOrders(){
-        //TODO
-        return ResponseEntity.ok(Collections.singletonList(new Order("id")));
+    private final OrderService orderService;
+
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
-    public ResponseEntity<List<Order>> getOrderById(String id){
-        //TODO
-        return null;
+    @ApiOperation(value = "Gets Orders", nickname = "getOrders", notes = "Get all the orders")
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Server error"),
+            @ApiResponse(code = 404, message = "Service not found"),
+            @ApiResponse(code = 200, message = "Successful retrieval")})
+    @GetMapping
+    public Response<List<OrderDTO>> getAllOrders() {
+        return Response.<List<OrderDTO>>builder()
+                .meta(ResponseMetadata.builder()
+                        .statusCode(200)
+                        .statusMessage(StatusMessage.SUCCESS.name()).build())
+                .data(orderService.getAllOrders())
+                .build();
     }
 
-    public ResponseEntity<List<Order>> getAllOrdersWithInInterval(ZonedDateTime startTime, ZonedDateTime endTime){
-        //TODO
-        return null;
+    @ApiOperation(value = "Create Order ", nickname = "createOrders", notes = "Creates new order")
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Server error"),
+            @ApiResponse(code = 404, message = "Service not found"),
+            @ApiResponse(code = 200, message = "Successful retrieval")})
+    @PostMapping
+    public Response<String> placeOrder(@RequestBody OrderDTO orderDTO) {
+        return Response.<String>builder()
+                .meta(ResponseMetadata.builder()
+                        .statusCode(200)
+                        .statusMessage(StatusMessage.SUCCESS.name()).build())
+                .data("Order Created")
+                .build();
     }
 
-    public ResponseEntity<List<Order>> top10OrdersWithHighestDollarAmountInZip(String zip){
-        //TODO
-        return null;
+    @ApiOperation(value = "Order pages", nickname = "getOrdersPages", notes = "Gets the Orders in pages")
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Server error"),
+            @ApiResponse(code = 404, message = "Service not found"),
+            @ApiResponse(code = 200, message = "Successful retrieval")})
+    @GetMapping(value = "/page/{pageNumber}")
+    public Response<List<OrderDTO>> getAllOrdersPagination(@PathVariable("pageNumber") int pagenumber) {
+        return Response.<List<OrderDTO>>builder()
+                .meta(ResponseMetadata.builder()
+                        .statusCode(200)
+                        .statusMessage(StatusMessage.SUCCESS.name()).build())
+                .data(orderService.getOrderPage(pagenumber))
+                .build();
     }
 
-    public ResponseEntity<Order> placeOrder(Order order){
-        return null;
+    @ApiOperation(value = "Get order by ID", nickname = "getOrderById", notes = "Get the orders by ID")
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Server error"),
+            @ApiResponse(code = 404, message = "Service not found"),
+            @ApiResponse(code = 200, message = "Successful retrieval")})
+    @GetMapping(value = "{id}")
+    public Response<OrderDTO> getOrderById(@PathVariable("id") String id) {
+        return Response.<OrderDTO>builder()
+                .meta(ResponseMetadata.builder()
+                        .statusCode(200)
+                        .statusMessage(StatusMessage.SUCCESS.name()).build())
+                .data((orderService.getOrderById(id)))
+                .build();
     }
 
-    public ResponseEntity<Order> cancelOrder(Order order){
-        return null;
+    @ApiOperation(value = "Orders within interval", nickname = "getOrdersInTime", notes = "Gets the orders created within dates")
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Server error"),
+            @ApiResponse(code = 404, message = "Service not found"),
+            @ApiResponse(code = 200, message = "Successful retrieval")})
+    @GetMapping(value = "interval")
+    public Response<List<OrderDTO>> getAllOrdersWithInInterval(@RequestParam(name = "startTime") Timestamp startTime, @RequestParam(name = "endTime") Timestamp endTime) {
+        return Response.<List<OrderDTO>>builder()
+                .meta(ResponseMetadata.builder()
+                        .statusCode(200)
+                        .statusMessage(StatusMessage.SUCCESS.name()).build())
+                .data(orderService.getAllOrdersWithInInterval(startTime, endTime))
+                .build();
     }
 
-    public ResponseEntity<Order> updateOrder(Order order){
-        return null;
+    @ApiOperation(value = "Gets top orders by zip", nickname = "getTopOrdersByZip", notes = "Gets the orders by zip which have highest amount")
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Server error"),
+            @ApiResponse(code = 404, message = "Service not found"),
+            @ApiResponse(code = 200, message = "Successful retrieval")})
+    @GetMapping(value = "zipcode/{zip}")
+    public Response<List<OrderDTO>> top10OrdersWithHighestDollarAmountInZip(@PathVariable("zip") String zip) {
+        return Response.<List<OrderDTO>>builder()
+                .meta(ResponseMetadata.builder()
+                        .statusCode(200)
+                        .statusMessage(StatusMessage.SUCCESS.name()).build())
+                .data(orderService.top10OrdersWithHighestDollarAmountInZip(zip))
+                .build();
+    }
+
+
+    @ApiOperation(value = "Cancel order", nickname = "cancelOrder", notes = "Cancels the Placed order")
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Server error"),
+            @ApiResponse(code = 404, message = "Service not found"),
+            @ApiResponse(code = 200, message = "Successful retrieval")})
+    @PutMapping(value = "/cancel/{id}")
+    public Response<OrderDTO> cancelOrder(@PathVariable("id") String id) {
+        return Response.<OrderDTO>builder()
+                .meta(ResponseMetadata.builder()
+                        .statusCode(200)
+                        .statusMessage(StatusMessage.SUCCESS.name()).build())
+                .data(orderService.cancelOrder(id))
+                .build();
+    }
+
+    @ApiOperation(value = "Updates the order", nickname = "updateOrders", notes = "update the order by new values")
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Server error"),
+            @ApiResponse(code = 404, message = "Service not found"),
+            @ApiResponse(code = 200, message = "Successful retrieval")})
+    @PutMapping(value = "{id}")
+    public Response<OrderDTO> updateOrder(@PathVariable("id") String oid, @RequestBody OrderDTO orderDTO) {
+        return Response.<OrderDTO>builder()
+                .meta(ResponseMetadata.builder()
+                        .statusCode(200)
+                        .statusMessage(StatusMessage.SUCCESS.name()).build())
+                .data(orderService.updateOrder(oid, orderDTO))
+                .build();
     }
 }
